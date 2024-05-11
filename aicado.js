@@ -23,7 +23,6 @@ window.addEventListener('message', function (event) {
     if (event.origin === "https://run.aicado.ai" && event.data.action === 'scrollToOutput') {
 
 
-        console.log(event.data);
 
         var totalOffset = 0;
 
