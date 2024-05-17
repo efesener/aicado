@@ -1,8 +1,7 @@
 (function() {
-    var chatPosition = window.chatPosition; // Varsayılan değer, 'left-bottom' olarak da ayarlanabilir.
+    var chatPosition = window.chatPosition; 
     var chatBalloonImg = window.chatBalloonImg;
   
-    // Stilleri ekleyin
     var style = document.createElement('style');
     var buttonPositionStyle = chatPosition === 'right-bottom' ? 'right: 20px;' : 'left: 20px;';
     style.innerHTML = `
@@ -28,7 +27,7 @@
         }
   
         #chatbotContainer {
-            width: 320px; /* Başlangıç genişliği */
+            width: 320px; 
             height: 540px;
             position: fixed;
             bottom: 90px;
@@ -47,10 +46,10 @@
             border-radius: 12px;
         }
 
-        /* Ekran genişliği 540px altında olduğunda genişliği %100 yapın ve yanlardan 20px boşluk bırakın */
+        
         @media (max-width: 540px) {
             #chatbotContainer {
-                width: calc(100% - 40px); /* Ekran genişliğinden 40px çıkararak hesapla */
+                width: calc(100% - 40px); 
                 left: 20px;
                 right: 20px;
             }
@@ -58,7 +57,7 @@
     `;
     document.head.appendChild(style);
   
-    // Chatbot butonunu ve penceresini oluşturun
+
     var chatbotButton = document.createElement('div');
     chatbotButton.id = 'chatbotButton';
     document.body.appendChild(chatbotButton);
@@ -67,14 +66,14 @@
     chatbotContainer.id = 'chatbotContainer';
     document.body.appendChild(chatbotContainer);
   
-    // Iframe'i chatbot penceresine ekleyin
+  
     var chatbotIframe = document.createElement('iframe');
     chatbotIframe.id = 'chatbotIframe';
     var srcIframe = window.chatbotIframeSrc;
     chatbotIframe.src = srcIframe;
     chatbotContainer.appendChild(chatbotIframe);
   
-    // Butona tıklama olayını dinleyin
+
     chatbotButton.addEventListener('click', function() {
         var display = chatbotContainer.style.display;
         chatbotContainer.style.display = display === 'block' ? 'none' : 'block';
