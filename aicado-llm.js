@@ -27,7 +27,7 @@
         }
   
         #chatbotContainer {
-            width: 320px; 
+            width: 440px; 
             height: 540px;
             position: fixed;
             bottom: 90px;
@@ -69,7 +69,9 @@
   
     var chatbotIframe = document.createElement('iframe');
     chatbotIframe.id = 'chatbotIframe';
+
     var srcIframe = window.chatbotIframeSrc;
+
     chatbotIframe.src = srcIframe;
     chatbotContainer.appendChild(chatbotIframe);
   
