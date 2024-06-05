@@ -8,7 +8,11 @@
     var showGreetings = localStorage.getItem('aicado-show-greetings') !== 'false';
 
     var style = document.createElement('style');
-    var buttonPositionStyle = chatPosition === 'right-bottom' ? 'right: 20px;' : 'left: 20px;';
+
+    // Define new variables and set default values for bottom and side positions
+    var buttonBottomPosVar = getComputedStyle(document.documentElement).getPropertyValue('--aicado-button-bottom-pos').trim() || '20px';
+    var buttonSidePosVar = getComputedStyle(document.documentElement).getPropertyValue('--aicado-button-side-pos').trim() || '20px';
+
     style.innerHTML = `
         :root {
             --aicado-greetings-font-size: 14px;
@@ -17,8 +21,6 @@
             --aicado-greetings-max-width: 250px;
             --aicado-greetings-transition-duration: 0.5s;
             --aicado-greetings-gap: 10px;
-            --aicado-greetings-bg: #fff; /* Default background color */
-            --aicado-greetings-color: #000; /* Default text color */
         }
 
         #chatbotButton {
@@ -31,15 +33,16 @@
             background-position: center;
             background-image: url('${chatBalloonImg}');
             position: fixed;
-            bottom: 20px;
-            ${buttonPositionStyle}
+            bottom: var(--aicado-button-bottom-pos, 20px);
+            ${chatPosition === 'right-bottom' ? 'right: var(--aicado-button-side-pos, 20px);' : ''}
+            ${chatPosition === 'left-bottom' ? 'left: var(--aicado-button-side-pos, 20px);' : ''}
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
             font-size: 30px;
-            z-index: 1001;
+            z-index: 999999;
         }
 
         #chatbotContainer {
@@ -47,7 +50,8 @@
             height: 540px;
             position: fixed;
             bottom: 90px;
-            ${buttonPositionStyle}
+            ${chatPosition === 'right-bottom' ? 'right: var(--aicado-button-side-pos);' : ''}
+            ${chatPosition === 'left-bottom' ? 'left: var(--aicado-button-side-pos);' : ''}
             border: 1px solid #ccc;
             box-shadow: rgba(0, 0, 0, 0.04) 0px 2px 3px;
             display: none;
@@ -73,15 +77,15 @@
         /* Styles for the message box */
         .aicadoMessageBox {
             position: fixed;
-            background-color: var(--aicado-greetings-bg);
-            color: var(--aicado-greetings-color);
+            background-color: var(--aicado-greetings-bg, #F5F5F5);
+            color: var(--aicado-greetings-color, #252525);
             border-radius: var(--aicado-greetings-border-radius);
             padding: var(--aicado-greetings-padding);
             margin-bottom: 5px;
             opacity: 0;                
             transform: translateY(20px); 
             transition: transform var(--aicado-greetings-transition-duration) ease-in-out, opacity var(--aicado-greetings-transition-duration) ease-in-out;
-            font-family: var(--aicado-greetings-font-family);
+            font-family: var(--aicado-greetings-font-family, Inter, sans-serif);
             font-size: var(--aicado-greetings-font-size);
             max-width: var(--aicado-greetings-max-width);
             z-index: 1002; 
@@ -92,7 +96,7 @@
             top: -25px;
             width: 20px;
             height: 20px;
-            background-color: var(--aicado-greetings-bg);
+            background-color: var(--aicado-greetings-bg, #F5F5F5);
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -103,7 +107,7 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 16px;
-            color: var(--aicado-greetings-color);
+            color: var(--aicado-greetings-color, #252525);
         }
     `;
     document.head.appendChild(style);
