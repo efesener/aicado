@@ -3,7 +3,7 @@
     var chatBalloonImg = window.chatBalloonImg;
 
     var greetings = window.greetings;
-
+    // Update
     // Check if we should show the greetings based on localStorage value
     var showGreetings = localStorage.getItem('aicado-show-greetings') !== 'false';
 
@@ -45,7 +45,7 @@
             z-index: 999999;
         }
 
-        #chatbotContainer {
+        #chatbotContainer {a
             width: 440px; 
             height: 540px;
             position: fixed;
