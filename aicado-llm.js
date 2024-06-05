@@ -4,6 +4,9 @@
 
     var greetings = window.greetings;
 
+    // Check if we should show the greetings based on localStorage value
+    var showGreetings = localStorage.getItem('aicado-show-greetings') !== 'false';
+
     var style = document.createElement('style');
     var buttonPositionStyle = chatPosition === 'right-bottom' ? 'right: 20px;' : 'left: 20px;';
     style.innerHTML = `
@@ -14,6 +17,8 @@
             --aicado-greetings-max-width: 250px;
             --aicado-greetings-transition-duration: 0.5s;
             --aicado-greetings-gap: 10px;
+            --aicado-greetings-bg: #fff; /* Default background color */
+            --aicado-greetings-color: #000; /* Default text color */
         }
 
         #chatbotButton {
@@ -67,7 +72,7 @@
 
         /* Styles for the message box */
         .aicadoMessageBox {
-            position: fixed; /* Make it fixed to float like chatbotButton */
+            position: fixed;
             background-color: var(--aicado-greetings-bg);
             color: var(--aicado-greetings-color);
             border-radius: var(--aicado-greetings-border-radius);
@@ -76,11 +81,29 @@
             opacity: 0;                
             transform: translateY(20px); 
             transition: transform var(--aicado-greetings-transition-duration) ease-in-out, opacity var(--aicado-greetings-transition-duration) ease-in-out;
-
             font-family: var(--aicado-greetings-font-family);
             font-size: var(--aicado-greetings-font-size);
             max-width: var(--aicado-greetings-max-width);
             z-index: 1002; 
+        }
+
+        .close-icon-container {
+            position: absolute;
+            top: -25px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--aicado-greetings-bg);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .close-icon {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--aicado-greetings-color);
         }
     `;
     document.head.appendChild(style);
@@ -101,36 +124,63 @@
     chatbotIframe.src = srcIframe;
     chatbotContainer.appendChild(chatbotIframe);
 
-    // Create message boxes for each greeting
-    if (greetings[0]) {
+    // Create message boxes for each greeting only if showGreetings is true
+    if (showGreetings && greetings[0]) {
         greetings.forEach((text, index) => {
             var aicadoMessageBox = document.createElement('div');
             aicadoMessageBox.innerText = text;
             aicadoMessageBox.className = 'aicadoMessageBox';
             aicadoMessageBox.id = `aicadoMessageBox-${index}`;
+
+            // Add close icon only to the last message box
+            if (index === greetings.length - 1) {
+                var closeIconContainer = document.createElement('div');
+                closeIconContainer.className = 'close-icon-container';
+
+                // Position the close icon container based on chatPosition
+                if (chatPosition === 'right-bottom') {
+                    closeIconContainer.style.right = '5px';
+                } else {
+                    closeIconContainer.style.left = '5px';
+                }
+
+                var closeIcon = document.createElement('span');
+                closeIcon.innerText = '×';
+                closeIcon.className = 'close-icon';
+                closeIcon.addEventListener('click', function() {
+                    localStorage.setItem('aicado-show-greetings', 'false');
+                    document.querySelectorAll('.aicadoMessageBox').forEach(box => {
+                        box.remove();
+                    });
+                });
+
+                closeIconContainer.appendChild(closeIcon);
+                aicadoMessageBox.appendChild(closeIconContainer);
+            }
+
             document.body.appendChild(aicadoMessageBox);
         });
     }
+
     // Function to update position of message boxes relative to chatbot button
     function updateMessagePositions() {
         const rect = chatbotButton.getBoundingClientRect();
         let totalHeight = 0;
-        const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--aicado-greetings-gap')); // Fixed gap between message boxes
+        const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--aicado-greetings-gap'));
 
         greetings.forEach((text, index) => {
             const aicadoMessageBox = document.getElementById(`aicadoMessageBox-${index}`);
             if (chatPosition === 'right-bottom') {
                 aicadoMessageBox.style.right = `${window.innerWidth - rect.right - 15}px`;
-                aicadoMessageBox.style.left = 'auto'; // Reset left to auto
+                aicadoMessageBox.style.left = 'auto';
             } else {
                 aicadoMessageBox.style.left = `${rect.left}px`;
-                aicadoMessageBox.style.right = 'auto'; // Reset right to auto
+                aicadoMessageBox.style.right = 'auto';
             }
 
             aicadoMessageBox.style.bottom = `${window.innerHeight - rect.top + totalHeight + gap}px`;
 
-            // Calculate new bottom position with fixed gap
-            totalHeight += aicadoMessageBox.offsetHeight + gap; // Update total height with current message box height + fixed gap
+            totalHeight += aicadoMessageBox.offsetHeight + gap;
         });
     }
 
@@ -139,18 +189,20 @@
         if (index >= greetings.length) return;
 
         const aicadoMessageBox = document.getElementById(`aicadoMessageBox-${index}`);
-        aicadoMessageBox.style.opacity = 1; // Show the message box
-        aicadoMessageBox.style.transform = 'translateY(0)'; // Slide in from bottom to top
+        aicadoMessageBox.style.opacity = 1;
+        aicadoMessageBox.style.transform = 'translateY(0)';
 
         setTimeout(() => {
-            showMessagesSequentially(index + 1); // Show the next message box after a delay
-        }, 1000); // Delay in milliseconds before showing the next message box
+            showMessagesSequentially(index + 1);
+        }, 1000);
     }
 
     // Call function once initially & also whenever window resizes(for responsiveness)
     window.addEventListener('load', () => {
-        updateMessagePositions();
-        showMessagesSequentially(); // Start showing messages sequentially
+        if (showGreetings) {
+            updateMessagePositions();
+            showMessagesSequentially();
+        }
     });
     window.addEventListener('resize', updateMessagePositions);
 
