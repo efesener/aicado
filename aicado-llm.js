@@ -46,8 +46,8 @@
             height: 540px;
             position: fixed;
             bottom: 90px;
-            ${chatPosition === 'right-bottom' ? 'right: var(--aicado-button-side-pos);' : ''}
-            ${chatPosition === 'left-bottom' ? 'left: var(--aicado-button-side-pos);' : ''}
+            ${chatPosition === 'right-bottom' ? 'right: var(--aicado-button-side-pos, 20px);' : ''}
+            ${chatPosition === 'left-bottom' ? 'left: var(--aicado-button-side-pos, 20px);' : ''}
             border: 1px solid #ccc;
             box-shadow: rgba(0, 0, 0, 0.04) 0px 2px 3px;
             display: none;
