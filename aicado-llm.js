@@ -3,15 +3,11 @@
     var chatBalloonImg = window.chatBalloonImg;
 
     var greetings = window.greetings;
-    // Update
+
     // Check if we should show the greetings based on localStorage value
     var showGreetings = localStorage.getItem('aicado-show-greetings') !== 'false';
 
     var style = document.createElement('style');
-
-    // Define new variables and set default values for bottom and side positions
-    var buttonBottomPosVar = getComputedStyle(document.documentElement).getPropertyValue('--aicado-button-bottom-pos').trim() || '20px';
-    var buttonSidePosVar = getComputedStyle(document.documentElement).getPropertyValue('--aicado-button-side-pos').trim() || '20px';
 
     style.innerHTML = `
         :root {
@@ -45,7 +41,7 @@
             z-index: 999999;
         }
 
-        #chatbotContainer {a
+        #chatbotContainer {
             width: 440px; 
             height: 540px;
             position: fixed;
@@ -109,6 +105,30 @@
             font-size: 16px;
             color: var(--aicado-greetings-color, #252525);
         }
+
+        /* New styles for chatbot close icon */
+        .chatbot-close-icon {
+            position: absolute;
+            top: 18px;
+            right: 14px;
+            width: 24px;
+            height: 24px;
+            background-color: #FFF;
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1003;
+        }
+
+        .chatbot-close-icon span {
+            font-size: 18px;
+            line-height: 24px;
+            margin-top: 2px;
+            color: #000;
+        }
     `;
     document.head.appendChild(style);
 
@@ -123,10 +143,22 @@
     var chatbotIframe = document.createElement('iframe');
     chatbotIframe.id = 'chatbotIframe';
 
-    var srcIframe = window.chatbotIframeSrc;
+    var srcIframe = window.chatbotIframeSrc + "chatBalloon=true";
 
     chatbotIframe.src = srcIframe;
     chatbotContainer.appendChild(chatbotIframe);
+
+    // Create and append the close icon to chatbotContainer
+    var closeIconDiv = document.createElement('div');
+    closeIconDiv.className = 'chatbot-close-icon';
+    var closeIconSpan = document.createElement('span');
+    closeIconSpan.innerText = '×';
+    closeIconDiv.appendChild(closeIconSpan);
+    chatbotContainer.appendChild(closeIconDiv);
+
+    closeIconDiv.addEventListener('click', function() {
+        chatbotContainer.style.display = 'none';
+    });
 
     // Create message boxes for each greeting only if showGreetings is true
     if (showGreetings && greetings[0]) {
