@@ -42,8 +42,9 @@ style.innerHTML = `
     }
 
     #chatbotContainer {
+        background: #fff;
         width: 440px; 
-        height: 540px;
+        height: 640px;
         position: fixed;
         bottom: var(--aicado-button-bottom-pos, 20px);
         ${chatPosition === 'right-bottom' ? 'right: var(--aicado-button-side-pos, 20px);' : ''}
@@ -247,12 +248,12 @@ window.addEventListener('load', () => {
     const buttonBottomPos = parseInt(computedStyle.getPropertyValue('--aicado-button-bottom-pos') || '20px');
     const calculatedMaxHeight = viewportHeight - buttonBottomPos - 20;
 
-    // Set the max-height of chatbotContainer if it exceeds 540px
+    // Set the max-height of chatbotContainer if it exceeds 640px
     const chatbotContainer = document.getElementById('chatbotContainer');
-    if (calculatedMaxHeight < 540) {
+    if (calculatedMaxHeight < 640) {
         chatbotContainer.style.maxHeight = `${calculatedMaxHeight}px`;
     } else {
-        chatbotContainer.style.height = '540px';
+        chatbotContainer.style.height = '640px';
     }
 });
 
@@ -265,12 +266,12 @@ window.addEventListener('resize', () => {
     const buttonBottomPos = parseInt(computedStyle.getPropertyValue('--aicado-button-side-pos') || '20px');
     const calculatedMaxHeight = viewportHeight - buttonBottomPos - 20;
 
-    // Update the max-height of chatbotContainer if it exceeds 540px
+    // Update the max-height of chatbotContainer if it exceeds 640px
     const chatbotContainer = document.getElementById('chatbotContainer');
-    if (calculatedMaxHeight < 540) {
+    if (calculatedMaxHeight < 640) {
         chatbotContainer.style.maxHeight = `${calculatedMaxHeight}px`;
     } else {
-        chatbotContainer.style.height = '540px';
+        chatbotContainer.style.height = '640px';
     }
 });
 
