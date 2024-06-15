@@ -144,7 +144,14 @@ document.body.appendChild(chatbotContainer);
 var chatbotIframe = document.createElement('iframe');
 chatbotIframe.id = 'chatbotIframe';
 
-var srcIframe = window.chatbotIframeSrc + "chatBalloon=true";
+
+var srcIframe = window.chatbotIframeSrc;
+
+if (srcIframe.includes('?')) {
+    srcIframe += "&chatBalloon=true";
+} else {
+    srcIframe += "?chatBalloon=true";
+}
 
 chatbotIframe.src = srcIframe;
 chatbotContainer.appendChild(chatbotIframe);
