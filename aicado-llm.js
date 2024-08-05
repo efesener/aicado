@@ -82,7 +82,7 @@ style.innerHTML = `
         opacity: 0;                
         transform: translateY(20px); 
         transition: transform var(--aicado-greetings-transition-duration) ease-in-out, opacity var(--aicado-greetings-transition-duration) ease-in-out;
-        font-family: var(--aicado-greetings-font-family, Inter, sans-serif);
+        font-family: var(--aicado-greetings-font-family, "Inter"), var(--aicado-greetings-font-type, sans-serif);
         font-size: var(--aicado-greetings-font-size);
         max-width: var(--aicado-greetings-max-width);
         z-index: 1002; 
@@ -126,9 +126,12 @@ style.innerHTML = `
 
     .chatbot-close-icon span {
         font-size: 18px;
-        line-height: 24px;
-        margin-top: 0px;
+        line-height: 25px;
+        margin-left: 1px;
         color: #000;
+        width: 100%;
+        height: 100%;
+        text-align: center;
     }
 `;
 document.head.appendChild(style);
@@ -144,6 +147,8 @@ document.body.appendChild(chatbotContainer);
 var chatbotIframe = document.createElement('iframe');
 chatbotIframe.id = 'chatbotIframe';
 
+// Add the allow attribute here
+chatbotIframe.allow = "clipboard-read; clipboard-write; microphone; camera";
 
 var srcIframe = window.chatbotIframeSrc;
 
@@ -154,6 +159,7 @@ if (srcIframe.includes('?')) {
 }
 
 chatbotIframe.src = srcIframe;
+
 chatbotContainer.appendChild(chatbotIframe);
 
 // Create and append the close icon to chatbotContainer
