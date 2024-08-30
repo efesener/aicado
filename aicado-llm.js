@@ -288,6 +288,8 @@ window.addEventListener('resize', () => {
     }
 });
 
+
+
 chatbotButton.addEventListener('click', function () {
     var display = chatbotContainer.style.display;
     chatbotContainer.style.display = display === 'block' ? 'none' : 'block';
@@ -296,4 +298,11 @@ chatbotButton.addEventListener('click', function () {
         box.remove();
     });
 });
+
+window.addEventListener("message", function(event) {
+    if (event.origin === "https://run.aicado.ai" && event.data.action === 'copyToClipboard') {
+        navigator.clipboard.writeText(event.data.text)
+    }
+});
+
 })();
