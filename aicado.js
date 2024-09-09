@@ -10,7 +10,7 @@ window.addEventListener('message', function (event) {
 
             var sValue = searchParams.get('s');
             var tValue = searchParams.get('t');
-			var slValue = iframes[i].src.split('go.aicado.ai/')[1];
+			var slValue = iframes[i].src.split('go.aicado.ai/')[1].split('?')[0];
 
             
             if ((slValue === event.data.slParameter) || (sValue === event.data.sParameter && tValue === event.data.tParameter)) {
@@ -35,7 +35,7 @@ window.addEventListener('message', function (event) {
 
             var sValue = searchParams.get('s');
             var tValue = searchParams.get('t');
-            var slValue = iframes[i].src.split('go.aicado.ai/')[1];
+            var slValue = iframes[i].src.split('go.aicado.ai/')[1].split('?')[0];
 
 
             if ((slValue === event.data.slParameter) || (sValue === event.data.sParameter && tValue === event.data.tParameter)) {
