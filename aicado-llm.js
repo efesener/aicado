@@ -105,22 +105,12 @@ style.innerHTML = `
         justify-content: center;
         align-items: center;
         padding: 0;
+        cursor: pointer;
     }
 
     .close-icon {
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 16px;
-        color: var(--aicado-greetings-color, #252525);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        line-height: 0;
-        padding: 0;
-        margin: 0;
-        transform: translateY(-1px);
+        width: 10px;
+        height: 10px;
     }
 
     /* New styles for chatbot close icon */
@@ -141,18 +131,9 @@ style.innerHTML = `
         padding: 0;
     }
 
-    .chatbot-close-icon span {
-        font-size: 18px;
-        line-height: 0;
-        margin: 0;
-        padding: 0;
-        color: #000;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transform: translateY(-1px);
+    .chatbot-close-icon svg {
+        width: 12px;
+        height: 12px;
     }
 
     /* Loading spinner styles */
@@ -219,9 +200,14 @@ chatbotIframe.addEventListener('load', function() {
 // Create and append the close icon to chatbotContainer
 var closeIconDiv = document.createElement('div');
 closeIconDiv.className = 'chatbot-close-icon';
-var closeIconSpan = document.createElement('span');
-closeIconSpan.innerText = '×';
-closeIconDiv.appendChild(closeIconSpan);
+var closeIconSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+closeIconSVG.setAttribute("viewBox", "0 0 24 24");
+closeIconSVG.setAttribute("fill", "none");
+closeIconSVG.setAttribute("stroke", "currentColor");
+closeIconSVG.setAttribute("stroke-width", "2");
+closeIconSVG.setAttribute("stroke-linecap", "round");
+closeIconSVG.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
+closeIconDiv.appendChild(closeIconSVG);
 chatbotContainer.appendChild(closeIconDiv);
 
 closeIconDiv.addEventListener('click', function() {
@@ -248,17 +234,23 @@ if (showGreetings && greetings[0]) {
                 closeIconContainer.style.left = '5px';
             }
 
-            var closeIcon = document.createElement('span');
-            closeIcon.innerText = '×';
-            closeIcon.className = 'close-icon';
-            closeIcon.addEventListener('click', function() {
+            var closeIconSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            closeIconSVG.setAttribute("viewBox", "0 0 24 24");
+            closeIconSVG.setAttribute("fill", "none");
+            closeIconSVG.setAttribute("stroke", "currentColor");
+            closeIconSVG.setAttribute("stroke-width", "2");
+            closeIconSVG.setAttribute("stroke-linecap", "round");
+            closeIconSVG.className = 'close-icon';
+            closeIconSVG.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
+            
+            closeIconContainer.appendChild(closeIconSVG);
+            closeIconContainer.addEventListener('click', function() {
                 localStorage.setItem('aicado-show-greetings', 'false');
                 document.querySelectorAll('.aicadoMessageBox').forEach(box => {
                     box.remove();
                 });
             });
 
-            closeIconContainer.appendChild(closeIcon);
             aicadoMessageBox.appendChild(closeIconContainer);
         }
 
