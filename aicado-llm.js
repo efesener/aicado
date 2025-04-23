@@ -61,6 +61,12 @@ style.innerHTML = `
         height: 100%;
         border: none;
         border-radius: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    #chatbotIframe.loaded {
+        opacity: 1;
     }
 
     @media (max-width: 540px) {
@@ -98,6 +104,7 @@ style.innerHTML = `
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 0;
     }
 
     .close-icon {
@@ -105,6 +112,15 @@ style.innerHTML = `
         font-weight: bold;
         font-size: 16px;
         color: var(--aicado-greetings-color, #252525);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        line-height: 0;
+        padding: 0;
+        margin: 0;
+        transform: translateY(-1px);
     }
 
     /* New styles for chatbot close icon */
@@ -122,16 +138,41 @@ style.innerHTML = `
         align-items: center;
         cursor: pointer;
         z-index: 1003;
+        padding: 0;
     }
 
     .chatbot-close-icon span {
         font-size: 18px;
-        line-height: 25px;
-        margin-left: 1px;
+        line-height: 0;
+        margin: 0;
+        padding: 0;
         color: #000;
         width: 100%;
         height: 100%;
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translateY(-1px);
+    }
+
+    /* Loading spinner styles */
+    .aicado-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e0e0e0;
+        border-top: 4px solid #808080;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        z-index: 1000;
+    }
+
+    @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 `;
 document.head.appendChild(style);
@@ -144,8 +185,16 @@ var chatbotContainer = document.createElement('div');
 chatbotContainer.id = 'chatbotContainer';
 document.body.appendChild(chatbotContainer);
 
+// Create and append the spinner
+var spinner = document.createElement('div');
+spinner.className = 'aicado-spinner';
+chatbotContainer.appendChild(spinner);
+
 var chatbotIframe = document.createElement('iframe');
 chatbotIframe.id = 'chatbotIframe';
+
+// Track if iframe has been loaded
+var isIframeLoaded = false;
 
 // Add the allow attribute here
 chatbotIframe.allow = "clipboard-read; clipboard-write; microphone; camera";
@@ -160,7 +209,12 @@ if (srcIframe.includes('?')) {
 
 chatbotIframe.src = srcIframe;
 
-chatbotContainer.appendChild(chatbotIframe);
+// Add load event listener to iframe
+chatbotIframe.addEventListener('load', function() {
+    spinner.style.display = 'none';
+    chatbotIframe.classList.add('loaded');
+    isIframeLoaded = true;
+});
 
 // Create and append the close icon to chatbotContainer
 var closeIconDiv = document.createElement('div');
@@ -292,6 +346,21 @@ window.addEventListener('resize', () => {
 
 chatbotButton.addEventListener('click', function () {
     var display = chatbotContainer.style.display;
+    
+    // If this is the first click (display is not 'block'), append the iframe
+    if (display !== 'block') {
+        if (!isIframeLoaded) {
+            // Only show spinner and remove loaded class if iframe hasn't been loaded yet
+            spinner.style.display = 'block';
+            chatbotIframe.classList.remove('loaded');
+            chatbotContainer.appendChild(chatbotIframe);
+        } else {
+            // If iframe is already loaded, just make sure spinner is hidden
+            spinner.style.display = 'none';
+            chatbotIframe.classList.add('loaded');
+        }
+    }
+    
     chatbotContainer.style.display = display === 'block' ? 'none' : 'block';
 
     document.querySelectorAll('.aicadoMessageBox').forEach(box => {
